@@ -115,21 +115,8 @@ RUN echo 'options("repos"="http://cran.rstudio.com")' >> /usr/local/lib/R/etc/Rp
 ##   PATH="/usr/local/lib/R/bin/:$PATH" \
 ##   ./bootstrap
 
-## Check out littler
-RUN cd /tmp \
-	&& git clone https://github.com/eddelbuettel/littler.git
-
-RUN cd /tmp/littler \
-	&& CC="clang-3.5 -fsanitize=undefined -fno-sanitize=float-divide-by-zero,vptr,function -fno-sanitize-recover" PATH="/usr/local/lib/R/bin/:$PATH" ./bootstrap \
-	&& ./configure --prefix=/usr \
-	&& make \
-	&& make install \
-	&& cp -vax examples/*.r /usr/local/bin 
-
-RUN cd /usr/local/bin \
-	&& mv R Rdevel \
-	&& mv Rscript Rscriptdevel \
-	&& ln -s Rdevel RD \
-	&& ln -s Rscriptdevel RDscript
+## Install littler from CRAN
+RUN R -e "install.packages('littler')"
+	&& Rdevel -e "install.packages('littler')"
 
 
